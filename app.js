@@ -3,6 +3,13 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 
+// create destination file if doesn't exist
+const fs = require('fs');
+const FILES_DESTINATION = 'received-files';
+if (!fs.existsSync(FILES_DESTINATION)) {
+  fs.mkdirSync(FILES_DESTINATION);
+}
+
 const app = express();
 
 // view engine setup
@@ -17,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const multer = require('multer');
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'received-files');
+    cb(null, FILES_DESTINATION);
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname + Date.now() + path.extname(file.originalname));
